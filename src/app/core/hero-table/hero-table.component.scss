@@ -1,0 +1,76 @@
+.tool-bar {
+    display: flex;
+    flex-direction: row;
+    height: 20px;
+    align-items: center;
+}
+
+label[for='herosearch'] {
+    line-height: 20px;
+    vertical-align: center;
+}
+
+input[name='herosearch'] {
+    background-color: var(--backcolor2);
+    border: 2px solid gray;
+    border-radius: 5px;
+    height: 100%;
+    font-size: 18px;
+    padding: 0 5px;
+    margin-left: 5px;
+
+    &:focus {
+        background-color: var(--backcolor2);
+        border: 2px solid gray;
+        border-radius: 5px;
+        height: 100%;
+        box-shadow: 0 0 5px rgba(20, 20, 255, 0.8);
+        filter: brightness(115%);
+        outline: none;
+    }
+}
+
+.tool-bar > * {
+    margin: 0px 10px;
+
+    &:first-child {
+        margin-left: 0;
+    }
+
+    &:last-child {
+        margin-right: 0;
+    }
+}
+
+.buttons button {
+    height: 30px;
+
+    &:first-child {
+        border-bottom-left-radius: 20px;
+        border-top-left-radius: 20px;
+    }
+    &:last-child {
+        border-bottom-right-radius: 20px;
+        border-top-right-radius: 20px;
+    }
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 5px rgba(20, 20, 255, 0.8);
+    }
+
+    &:disabled {
+        filter: brightness(85%);
+    }
+}
+
+.table-content {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+
+    rx-hero-badge {
+        margin: 10px;
+    }
+}
