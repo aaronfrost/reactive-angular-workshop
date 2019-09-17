@@ -23,6 +23,11 @@ In order to work on this project and go through the trainings, please do each of
     -   `cd` into the folder you just cloned
     -   Run `npm install`
 
+-   Get APIKEY from [developer.marvel.com](https://developer.marvel.com/)
+    -   Go to [https://developer.marvel.com/](https://developer.marvel.com/)
+    -   Create a developer account
+    -   Add your localhost to the domains listed
+
 Please do all of this before the training starts. Otherwise we will have to spend the first
 part of the training up and running. If there are any questions, reach out to me (Frosty)
 on 1800Contacts' Slack. Or DM me on Twitter.
