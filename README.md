@@ -8,8 +8,8 @@ based heavily on RxJS.
 -   Intermediate Reactive concepts
     -   BehaviorSubjects
     -   combineLatest
-    -   several new operators
--   Internediate Angular patterns
+    -   several new operators: pluck, map, tap, distinctUntilChanged
+-   Intermediate Angular patterns
 -   Intermediate TypeScript
 -   Basic State Management
 -   Angular Performance
