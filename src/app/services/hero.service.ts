@@ -23,7 +23,7 @@ export class HeroService {
             params: {
                 apikey: environment.MARVEL_API.PUBLIC_KEY,
                 limit: `${LIMIT_LOW}`,
-                //nameStartsWith: 'ironman', // once we have search
+                // nameStartsWith: 'iron', // once we have search
                 offset: `${0}`, // page * limit
             },
         })
