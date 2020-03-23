@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HeroService } from '../services/hero.service';
+import { HeroService } from '../../services/hero.service';
 
 @Component({
     selector: 'rx-hero-table',

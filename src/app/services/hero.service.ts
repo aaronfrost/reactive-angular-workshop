@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../environments/environment';
 
 // The URL to the Marvel API
 const HERO_API = `${environment.MARVEL_API.URL}/v1/public/characters`;
