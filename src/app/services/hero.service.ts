@@ -1,7 +1,37 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
+
+export interface Hero {
+    id: number;
+    name: string;
+    description: string;
+    thumbnail: HeroThumbnail;
+    resourceURI: string;
+    comics: HeroSubItems;
+    events: HeroSubItems;
+    series: HeroSubItems;
+    stories: HeroSubItems;
+}
+
+export interface HeroThumbnail {
+    path: string;
+    extendion: string;
+}
+
+export interface HeroSubItems {
+    available: number;
+    returned: number;
+    collectionURI: string;
+    items: HeroSubItem[];
+}
+
+export interface HeroSubItem {
+    resourceURI: string;
+    name: string;
+}
 
 // The URL to the Marvel API
 const HERO_API = `${environment.MARVEL_API.URL}/v1/public/characters`;
@@ -18,7 +48,7 @@ const LIMITS = [LIMIT_LOW, LIMIT_MID, LIMIT_HIGH];
 export class HeroService {
     limits = LIMITS;
 
-    heroes$ = this.http
+    heroes$: Observable<Hero[]> = this.http
         .get(HERO_API, {
             params: {
                 apikey: environment.MARVEL_API.PUBLIC_KEY,

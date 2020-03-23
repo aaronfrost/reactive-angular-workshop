@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { HeroService } from '../../services/hero.service';
+import { Hero, HeroService } from '../../services/hero.service';
 
 @Component({
     selector: 'rx-hero-table',
@@ -28,7 +28,7 @@ import { HeroService } from '../../services/hero.service';
                 <label>Total Results: ???</label>
             </span>
         </div>
-        <div class="table-content" *ngIf="hero.heroes$ | async as heroes">
+        <div class="table-content">
             <rx-hero-badge
                 *ngFor="let hero of heroes"
                 [hero]="hero"
@@ -38,7 +38,13 @@ import { HeroService } from '../../services/hero.service';
     styleUrls: ['./hero-table.component.scss'],
 })
 export class HeroTableComponent implements OnInit {
-    constructor(private hero: HeroService) {}
+    heroes: Hero[];
+
+    constructor(private hero: HeroService) {
+        hero.heroes$.subscribe(heroes => {
+            this.heroes = heroes;
+        });
+    }
 
     ngOnInit() {}
 }

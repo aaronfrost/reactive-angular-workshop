@@ -3,9 +3,19 @@ import { Component, OnInit } from '@angular/core';
 @Component({
     selector: 'rx-footer',
     template: `
-        <span>Reactive Angular</span>
+        <span
+            ><a
+                href="https://github.com/aaronfrost/reactive-angular-workshop"
+                target="_blank"
+                >Reactive Angular</a
+            ></span
+        >
         <span class="spacer"> - </span>
-        <span>@aaronfrost</span>
+        <span
+            ><a href="https://twitter.com/aaronfrost" target="_blank"
+                >@aaronfrost</a
+            ></span
+        >
     `,
     styles: [
         `
