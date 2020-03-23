@@ -19,14 +19,16 @@ import { HeroService } from '../../services/hero.service';
             <span class="result-tool">
                 <label>Show Results: </label>
                 <span class="buttons">
-                    <button *ngFor="let limit of limits">{{ limit }}</button>
+                    <button *ngFor="let limit of hero.limits">
+                        {{ limit }}
+                    </button>
                 </span>
             </span>
             <span class="total-tool">
                 <label>Total Results: ???</label>
             </span>
         </div>
-        <div class="table-content" *ngIf="heroes$ | async as heroes">
+        <div class="table-content" *ngIf="hero.heroes$ | async as heroes">
             <rx-hero-badge
                 *ngFor="let hero of heroes"
                 [hero]="hero"
@@ -36,10 +38,7 @@ import { HeroService } from '../../services/hero.service';
     styleUrls: ['./hero-table.component.scss'],
 })
 export class HeroTableComponent implements OnInit {
-    heroes$ = this.heroService.heroes$;
-    limits = this.heroService.limits;
-
-    constructor(private heroService: HeroService) {}
+    constructor(private hero: HeroService) {}
 
     ngOnInit() {}
 }
