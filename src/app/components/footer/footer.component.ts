@@ -33,6 +33,9 @@ import { Component, OnInit } from '@angular/core';
             .spacer {
                 margin: 0px 10px;
             }
+            a:visited {
+                color: var(--header);
+            }
         `,
     ],
 })

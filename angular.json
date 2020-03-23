@@ -22,7 +22,7 @@
                         "main": "src/main.ts",
                         "polyfills": "src/polyfills.ts",
                         "tsConfig": "tsconfig.app.json",
-                        "aot": false,
+                        "aot": true,
                         "assets": ["src/favicon.ico", "src/assets"],
                         "styles": ["src/styles/styles.scss"],
                         "scripts": []
@@ -40,7 +40,6 @@
                             "sourceMap": false,
                             "extractCss": true,
                             "namedChunks": false,
-                            "aot": true,
                             "extractLicenses": true,
                             "vendorChunk": false,
                             "buildOptimizer": true,
@@ -49,6 +48,10 @@
                                     "type": "initial",
                                     "maximumWarning": "2mb",
                                     "maximumError": "5mb"
+                                },
+                                {
+                                    "type": "anyComponentStyle",
+                                    "maximumWarning": "6kb"
                                 }
                             ]
                         }
@@ -109,5 +112,8 @@
             }
         }
     },
-    "defaultProject": "reactive-angular"
+    "defaultProject": "reactive-angular",
+    "cli": {
+        "analytics": "019cfc57-c65c-4902-a1ac-a999f70e9666"
+    }
 }

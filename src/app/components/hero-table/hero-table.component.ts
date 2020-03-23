@@ -40,7 +40,7 @@ import { Hero, HeroService } from '../../services/hero.service';
 export class HeroTableComponent implements OnInit {
     heroes: Hero[];
 
-    constructor(private hero: HeroService) {
+    constructor(public hero: HeroService) {
         hero.heroes$.subscribe(heroes => {
             this.heroes = heroes;
         });
