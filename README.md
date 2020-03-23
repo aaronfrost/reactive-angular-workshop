@@ -50,6 +50,7 @@ In order to work on this project and go through the trainings, please do each of
     -   Go to [https://developer.marvel.com/](https://developer.marvel.com/)
     -   Create a developer account
     -   Add `localhost` to the `Your Authorized Referers` section
+    -   Add your publc and private keys into `environments.ts` files
 
 Please do all of this before the training starts. Otherwise we will have to spend the first
 part of the training up and running. If there are any questions, reach out to me (Frosty) me on Twitter.
