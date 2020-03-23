@@ -3,6 +3,7 @@
     flex-direction: row;
     height: 20px;
     align-items: center;
+    justify-content: space-between;
 }
 
 label[for='herosearch'] {
@@ -42,24 +43,28 @@ input[name='herosearch'] {
     }
 }
 
-.buttons button {
-    height: 30px;
+.buttons {
+    display: flex;
 
-    &:first-child {
-        border-bottom-left-radius: 20px;
-        border-top-left-radius: 20px;
-    }
-    &:last-child {
-        border-bottom-right-radius: 20px;
-        border-top-right-radius: 20px;
-    }
-    &:focus {
-        outline: none;
-        box-shadow: 0 0 5px rgba(20, 20, 255, 0.8);
-    }
+    button {
+        height: 30px;
 
-    &:disabled {
-        filter: brightness(85%);
+        &:first-child {
+            border-bottom-left-radius: 20px;
+            border-top-left-radius: 20px;
+        }
+        &:last-child {
+            border-bottom-right-radius: 20px;
+            border-top-right-radius: 20px;
+        }
+        &:focus {
+            outline: none;
+            box-shadow: 0 0 5px rgba(20, 20, 255, 0.8);
+        }
+
+        &:disabled {
+            filter: brightness(85%);
+        }
     }
 }
 
@@ -73,4 +78,12 @@ input[name='herosearch'] {
     rx-hero-badge {
         margin: 10px;
     }
+}
+
+.page-tool,
+.result-tool,
+.total-tool {
+    display: flex;
+    flex-direction: column;
+    width: 150px;
 }
