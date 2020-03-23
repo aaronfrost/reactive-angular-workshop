@@ -1,6 +1,30 @@
 # Reactive Angular Workshop
 
-## Prereqs
+## What will be covered?
+
+This workshop will teach attendees how to use reactive techniques in your Angular app. It will be
+based heavily on RxJS.
+
+-   Intermediate Reactive concepts
+    -   BehaviorSubjects
+    -   combineLatest
+    -   several new operators
+-   Internediate Angular patterns
+-   Intermediate TypeScript
+-   Basic State Management
+-   Angular Performance
+
+## What will NOT be covered?
+
+The following topics will not be covered in this class. To be fair to all involved, any questions
+that dive into these topics will be deferred until breaks, until after the workshop is over, or
+indefinitely.
+
+-   Angular Basics, or beginner Angular questions
+-   TypeScript Basics, or beginner TypeScript questions
+-   Reactive Basics, or anything that TOO basic around Observables
+
+## Before you come to class
 
 In order to work on this project and go through the trainings, please do each of the following:
 
