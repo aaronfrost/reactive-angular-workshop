@@ -51,6 +51,7 @@ In order to work on this project and go through the trainings, please do each of
     -   Create a developer account
     -   Add `localhost` to the `Your Authorized Referers` section
     -   Add your public and private keys into `environments.ts` files
+-   Read [Don't Unsubscribe](https://medium.com/@benlesh/rxjs-dont-unsubscribe-6753ed4fda87) blog by Ben Lesh
 
 Please do all of this before the training starts. Otherwise we will have to spend the first
 part of the training up and running. If there are any questions, reach out to me (Frosty) me on Twitter.
