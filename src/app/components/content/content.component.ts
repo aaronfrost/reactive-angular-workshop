@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 @Component({
     selector: 'rx-content',
     template: `
-        <rx-hero-table></rx-hero-table>
+        <router-outlet></router-outlet>
     `,
     styles: [
         `
