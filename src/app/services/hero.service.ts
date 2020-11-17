@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { debounceTime, map, share, switchMap, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
 export interface Hero {
@@ -59,6 +59,7 @@ export class HeroService {
 
     changes$ = combineLatest([this.search$, this.page$, this.limit$]);
     heroesResponse$ = this.changes$.pipe(
+        debounceTime(200),
         switchMap(([search, page, limit]) => {
             const params: any = {
                 apikey: environment.MARVEL_API.PUBLIC_KEY,
@@ -71,6 +72,7 @@ export class HeroService {
 
             return this.http.get(HERO_API, { params });
         }),
+        share(),
     );
     heroes$ = this.heroesResponse$.pipe(map((res: any) => res.data.results));
     total$ = this.heroesResponse$.pipe(map((res: any) => res.data.total));
@@ -87,9 +89,11 @@ export class HeroService {
 
     setLimit(limit: number) {
         this.limitBS.next(limit);
+        this.pageBS.next(0);
     }
 
     setSearch(search: string) {
         this.searchBS.next(search);
+        this.pageBS.next(0);
     }
 }

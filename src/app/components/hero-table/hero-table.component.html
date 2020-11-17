@@ -15,8 +15,20 @@
             {{ hero.totalPages$ | async }} :
         </label>
         <span class="buttons">
-            <button class="prev" (click)="hero.movePageBy(-1)">Prev</button>
-            <button class="next" (click)="hero.movePageBy(1)">Next</button>
+            <button
+                class="prev"
+                (click)="hero.movePageBy(-1)"
+                [disabled]="disablePrevious$ | async"
+            >
+                Prev
+            </button>
+            <button
+                class="next"
+                (click)="hero.movePageBy(1)"
+                [disabled]="disableNext$ | async"
+            >
+                Next
+            </button>
         </span>
     </span>
     <span class="result-tool">
@@ -36,5 +48,8 @@
     </span>
 </div>
 <div class="table-content">
-    <rx-hero-badge *ngFor="let hero of heroes" [hero]="hero"></rx-hero-badge>
+    <rx-hero-badge
+        *ngFor="let hero of hero.heroes$ | async"
+        [hero]="hero"
+    ></rx-hero-badge>
 </div>
