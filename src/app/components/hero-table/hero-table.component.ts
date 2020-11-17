@@ -16,4 +16,10 @@ export class HeroTableComponent implements OnInit {
     }
 
     ngOnInit() {}
+
+    setLimit(limit) {
+        this.hero.setLimit(limit).subscribe(heroes => {
+            this.heroes = heroes;
+        });
+    }
 }

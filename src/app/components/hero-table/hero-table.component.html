@@ -13,7 +13,7 @@
     <span class="result-tool">
         <label>Show Results: </label>
         <span class="buttons">
-            <button *ngFor="let limit of hero.limits">
+            <button *ngFor="let limit of hero.limits" (click)="setLimit(limit)">
                 {{ limit }}
             </button>
         </span>

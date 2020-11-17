@@ -47,17 +47,32 @@ const LIMITS = [LIMIT_LOW, LIMIT_MID, LIMIT_HIGH];
 })
 export class HeroService {
     limits = LIMITS;
+    _limit = LIMIT_LOW;
 
     heroes$: Observable<Hero[]> = this.http
         .get(HERO_API, {
             params: {
                 apikey: environment.MARVEL_API.PUBLIC_KEY,
-                limit: `${LIMIT_LOW}`,
-                // nameStartsWith: 'iron', // once we have search
+                limit: `${this._limit}`,
+                nameStartsWith: 'hulk', // once we have search
                 offset: `${0}`, // page * limit
             },
         })
         .pipe(map((res: any) => res.data.results));
 
     constructor(private http: HttpClient) {}
+
+    setLimit(limit) {
+        this._limit = limit;
+        return this.http
+            .get(HERO_API, {
+                params: {
+                    apikey: environment.MARVEL_API.PUBLIC_KEY,
+                    limit: `${this._limit}`,
+                    // nameStartsWith: 'hulk', // once we have search
+                    offset: `${0}`, // page * limit
+                },
+            })
+            .pipe(map((res: any) => res.data.results));
+    }
 }
