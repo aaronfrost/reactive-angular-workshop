@@ -1,55 +1,57 @@
-<div class="tool-bar">
-    <span class="search-tool">
-        <label for="herosearch">Search: </label>
-        <input
-            name="herosearch"
-            [value]="hero.search$ | async"
-            (input)="hero.setSearch($event.target.value)"
-        />
-    </span>
-    <span class="page-tool">
-        <label
-            >Page
-            {{ hero.userPage$ | async }}
-            of
-            {{ hero.totalPages$ | async }} :
-        </label>
-        <span class="buttons">
-            <button
-                class="prev"
-                (click)="hero.movePageBy(-1)"
-                [disabled]="disablePrevious$ | async"
-            >
-                Prev
-            </button>
-            <button
-                class="next"
-                (click)="hero.movePageBy(1)"
-                [disabled]="disableNext$ | async"
-            >
-                Next
-            </button>
+<ng-container *ngIf="vm$ | async as vm">
+    <div class="tool-bar">
+        <span class="search-tool">
+            <label for="herosearch">Search: </label>
+            <input
+                name="herosearch"
+                [value]="vm.search"
+                (input)="hero.setSearch($event.target.value)"
+            />
         </span>
-    </span>
-    <span class="result-tool">
-        <label>Show Results: </label>
-        <span cla ss="buttons">
-            <button
-                *ngFor="let limit of hero.limits"
-                [disabled]="(hero.limit$ | async) === limit"
-                (click)="hero.setLimit(limit)"
-            >
-                {{ limit }}
-            </button>
+        <span class="page-tool">
+            <label
+                >Page
+                {{ vm.userPage }}
+                of
+                {{ vm.totalPages }} :
+            </label>
+            <span class="buttons">
+                <button
+                    class="prev"
+                    (click)="hero.movePageBy(-1)"
+                    [disabled]="disablePrevious$ | async"
+                >
+                    Prev
+                </button>
+                <button
+                    class="next"
+                    (click)="hero.movePageBy(1)"
+                    [disabled]="disableNext$ | async"
+                >
+                    Next
+                </button>
+            </span>
         </span>
-    </span>
-    <span class="total-tool">
-        <label>Total Results: {{ hero.total$ | async }}</label>
-    </span>
-</div>
-<div class="table-content">
-    <rx-hero-badge
-        *ngFor="let hero of hero.heroes$ | async"
-        [hero]="hero"
-    ></rx-hero-badge>
-</div>
+        <span class="result-tool">
+            <label>Show Results: </label>
+            <span cla ss="buttons">
+                <button
+                    *ngFor="let limit of hero.limits"
+                    [disabled]="vm.limit === limit"
+                    (click)="hero.setLimit(limit)"
+                >
+                    {{ limit }}
+                </button>
+            </span>
+        </span>
+        <span class="total-tool">
+            <label>Total Results: {{ vm.total }}</label>
+        </span>
+    </div>
+    <div class="table-content">
+        <rx-hero-badge
+            *ngFor="let hero of vm.heroes"
+            [hero]="hero"
+        ></rx-hero-badge>
+    </div>
+</ng-container>
