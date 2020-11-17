@@ -1,7 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
-import { debounceTime, map, share, switchMap, tap } from 'rxjs/operators';
+import {
+    debounceTime,
+    map,
+    pluck,
+    share,
+    switchMap,
+    tap,
+} from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
 export interface Hero {
@@ -42,19 +49,23 @@ const LIMIT_MID = 25;
 const LIMIT_HIGH = 100;
 const LIMITS = [LIMIT_LOW, LIMIT_MID, LIMIT_HIGH];
 
+const DEFAULT_STATE = {
+    search: '',
+    page: 0,
+    limit: LIMIT_LOW,
+};
+
 @Injectable({
     providedIn: 'root',
 })
 export class HeroService {
     limits = LIMITS;
 
-    private searchBS = new BehaviorSubject('');
-    private pageBS = new BehaviorSubject(0);
-    private limitBS = new BehaviorSubject(LIMIT_LOW);
+    private heroStateBS = new BehaviorSubject(DEFAULT_STATE);
 
-    search$ = this.searchBS.asObservable();
-    page$ = this.pageBS.asObservable();
-    limit$ = this.limitBS.asObservable();
+    search$ = this.heroStateBS.pipe(pluck('search'));
+    page$ = this.heroStateBS.pipe(pluck('page'));
+    limit$ = this.heroStateBS.pipe(pluck('limit'));
     userPage$ = this.page$.pipe(map(val => val + 1));
 
     changes$ = combineLatest([this.search$, this.page$, this.limit$]);
@@ -83,17 +94,28 @@ export class HeroService {
     constructor(private http: HttpClient) {}
 
     movePageBy(moveBy: number) {
-        const currentPage = this.pageBS.getValue();
-        this.pageBS.next(currentPage + moveBy);
+        const state = this.heroStateBS.getValue();
+        this.heroStateBS.next({
+            ...state,
+            page: state.page + moveBy,
+        });
     }
 
     setLimit(limit: number) {
-        this.limitBS.next(limit);
-        this.pageBS.next(0);
+        const state = this.heroStateBS.getValue();
+        this.heroStateBS.next({
+            ...state,
+            limit,
+            page: 0,
+        });
     }
 
     setSearch(search: string) {
-        this.searchBS.next(search);
-        this.pageBS.next(0);
+        const state = this.heroStateBS.getValue();
+        this.heroStateBS.next({
+            ...state,
+            search,
+            page: 0,
+        });
     }
 }

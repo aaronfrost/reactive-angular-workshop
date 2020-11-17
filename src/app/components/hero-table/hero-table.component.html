@@ -50,7 +50,7 @@
     </div>
     <div class="table-content">
         <rx-hero-badge
-            *ngFor="let hero of vm.heroes"
+            *ngFor="let hero of hero.heroes$ | async"
             [hero]="hero"
         ></rx-hero-badge>
     </div>
