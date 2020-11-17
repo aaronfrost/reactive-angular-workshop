@@ -8,6 +8,7 @@ import { Hero, HeroService } from '../../services/hero.service';
 })
 export class HeroTableComponent implements OnInit {
     heroes: Hero[];
+    totalHeroes = 0;
 
     constructor(public hero: HeroService) {
         hero.heroes$.subscribe(heroes => {
@@ -16,10 +17,4 @@ export class HeroTableComponent implements OnInit {
     }
 
     ngOnInit() {}
-
-    setLimit(limit) {
-        this.hero.setLimit(limit).subscribe(heroes => {
-            this.heroes = heroes;
-        });
-    }
 }
