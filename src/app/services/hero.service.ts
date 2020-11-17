@@ -79,4 +79,17 @@ export class HeroService {
     );
 
     constructor(private http: HttpClient) {}
+
+    movePageBy(moveBy: number) {
+        const currentPage = this.pageBS.getValue();
+        this.pageBS.next(currentPage + moveBy);
+    }
+
+    setLimit(limit: number) {
+        this.limitBS.next(limit);
+    }
+
+    setSearch(search: string) {
+        this.searchBS.next(search);
+    }
 }

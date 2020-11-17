@@ -1,7 +1,11 @@
 <div class="tool-bar">
     <span class="search-tool">
         <label for="herosearch">Search: </label>
-        <input name="herosearch" [value]="hero.search$ | async" />
+        <input
+            name="herosearch"
+            [value]="hero.search$ | async"
+            (input)="hero.setSearch($event.target.value)"
+        />
     </span>
     <span class="page-tool">
         <label
@@ -11,8 +15,8 @@
             {{ hero.totalPages$ | async }} :
         </label>
         <span class="buttons">
-            <button class="prev">Prev</button>
-            <button class="next">Next</button>
+            <button class="prev" (click)="hero.movePageBy(-1)">Prev</button>
+            <button class="next" (click)="hero.movePageBy(1)">Next</button>
         </span>
     </span>
     <span class="result-tool">
@@ -21,6 +25,7 @@
             <button
                 *ngFor="let limit of hero.limits"
                 [disabled]="(hero.limit$ | async) === limit"
+                (click)="hero.setLimit(limit)"
             >
                 {{ limit }}
             </button>
