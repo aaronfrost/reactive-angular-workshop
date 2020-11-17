@@ -33,7 +33,11 @@ const routes: Routes = [
         HeroBadgeComponent,
         HeroDetailsComponent,
     ],
-    imports: [BrowserModule, HttpClientModule, RouterModule.forRoot(routes)],
+    imports: [
+        BrowserModule,
+        HttpClientModule,
+        RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' }),
+    ],
     providers: [],
     bootstrap: [AppComponent],
 })
