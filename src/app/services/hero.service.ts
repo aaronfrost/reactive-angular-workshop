@@ -74,24 +74,23 @@ export class HeroService {
         distinctUntilChanged(),
         mergeMap(() => this.heroState),
         switchMap(state => {
-            const search = state.search.trim();
-            if (state.heroCache[search]) {
-                return of(state.heroCache[search]);
+            if (state.heroCache[state.search]) {
+                return of(state.heroCache[state.search]);
             }
             const params: any = {
                 apikey: environment.MARVEL_API.PUBLIC_KEY,
                 limit: `${state.limit}`,
                 offset: `${state.page * state.limit}`, // page * limit
             };
-            if (search && search.length) {
-                params.nameStartsWith = search;
+            if (state.search && state.search.length) {
+                params.nameStartsWith = state.search;
             }
             return this.http.get(HERO_API, { params }).pipe(
                 tap(res => {
                     /** merge in new result */
                     const heroCache = {
                         ...state.heroCache,
-                        [search]: res,
+                        [state.search]: res,
                     };
                     /** update the local state. */
                     this.heroState.next({ ...state, heroCache });
