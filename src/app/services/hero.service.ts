@@ -1,13 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
+import { BehaviorSubject, combineLatest, of } from 'rxjs';
 import {
     debounceTime,
     distinctUntilChanged,
     map,
+    mergeMap,
     pluck,
-    scan,
-    share,
     switchMap,
     tap,
 } from 'rxjs/operators';
@@ -55,6 +54,7 @@ const DEFAULT_STATE = {
     search: '',
     page: 0,
     limit: LIMIT_MID,
+    heroCache: {},
 };
 
 @Injectable({
@@ -69,29 +69,13 @@ export class HeroService {
     userPage$ = this.page$.pipe(map(page => page + 1));
     limit$ = this.heroState.pipe(pluck('limit'));
 
-    changes$ = combineLatest([
-        this.search$.pipe(map(search => search.trim())),
-        this.page$,
-        this.limit$,
-    ]).pipe(map(([search, page, limit]) => ({ search, page, limit })));
-
-    heroesResponse$ = this.changes$.pipe(
+    heroesResponse$ = this.search$.pipe(
         debounceTime(500),
-        distinctUntilChanged(
-            (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr),
-        ),
-        scan((acc, curr) => {
-            if (!acc[JSON.stringify(curr)]) {
-                acc[JSON.stringify(curr)] = { response: null, state: curr };
-            }
-            acc['THEVERYLATEST'] = acc[JSON.stringify(curr)];
-            return acc;
-        }, {}),
-        switchMap((acc: any) => {
-            const latest = acc.THEVERYLATEST;
-            const state = latest.state;
-            if (latest.response != null) {
-                return of(latest.response);
+        distinctUntilChanged(),
+        mergeMap(() => this.heroState),
+        switchMap(state => {
+            if (state.heroCache[state.search]) {
+                return of(state.heroCache[state.search]);
             }
             const params: any = {
                 apikey: environment.MARVEL_API.PUBLIC_KEY,
@@ -101,12 +85,20 @@ export class HeroService {
             if (state.search && state.search.length) {
                 params.nameStartsWith = state.search;
             }
-            return this.http
-                .get(HERO_API, { params })
-                .pipe(tap(res => (latest.response = res)));
+            return this.http.get(HERO_API, { params }).pipe(
+                tap(res => {
+                    /** merge in new result */
+                    const heroCache = {
+                        ...state.heroCache,
+                        [state.search]: res,
+                    };
+                    /** update the local state. */
+                    this.heroState.next({ ...state, heroCache });
+                }),
+            );
         }),
-        share(),
     );
+
     heroes$ = this.heroesResponse$.pipe(map((res: any) => res.data.results));
     total$ = this.heroesResponse$.pipe(map((res: any) => res.data.total));
     totalPages$ = combineLatest([this.total$, this.limit$]).pipe(
@@ -136,7 +128,7 @@ export class HeroService {
         const state = this.heroState.getValue();
         this.heroState.next({
             ...state,
-            search,
+            search: search.trim(),
             page: 0,
         });
     }
