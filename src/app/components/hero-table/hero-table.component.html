@@ -13,8 +13,20 @@
                 >Page {{ page$ | async }} of {{ totalPages$ | async }} :
             </label>
             <span class="buttons">
-                <button class="prev" (click)="movePageBy(-1)">Prev</button>
-                <button class="next" (click)="movePageBy(1)">Next</button>
+                <button
+                    class="prev"
+                    (click)="movePageBy(-1)"
+                    [disabled]="(page$ | async) == 1"
+                >
+                    Prev
+                </button>
+                <button
+                    class="next"
+                    (click)="movePageBy(1)"
+                    [disabled]="(totalPages$ | async) === (page$ | async)"
+                >
+                    Next
+                </button>
             </span>
         </span>
         <span class="result-tool">
