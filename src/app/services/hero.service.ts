@@ -42,9 +42,9 @@ const LIMIT_MID = 25;
 const LIMIT_HIGH = 100;
 const LIMITS = [LIMIT_LOW, LIMIT_MID, LIMIT_HIGH];
 
-const DEFAULT_LIMIT = LIMIT_LOW;
-const DEFAULT_SEARCH = '';
-const DEFAULT_PAGE = 0;
+export const DEFAULT_LIMIT = LIMIT_LOW;
+export const DEFAULT_SEARCH = '';
+export const DEFAULT_PAGE = 0;
 
 @Injectable({
     providedIn: 'root',

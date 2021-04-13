@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Hero, HeroService } from '../../services/hero.service';
+import { DEFAULT_PAGE, Hero, HeroService } from '../../services/hero.service';
 
 @Component({
     selector: 'rx-hero-table',
@@ -19,6 +19,7 @@ export class HeroTableComponent {
 
     doSearch(event: any) {
         this.hero.searchBS.next(event.target.value);
+        this.hero.pageBS.next(DEFAULT_PAGE);
     }
 
     movePageBy(moveBy: number) {
@@ -28,5 +29,6 @@ export class HeroTableComponent {
 
     setLimit(limit: number) {
         this.hero.limitBS.next(limit);
+        this.hero.pageBS.next(DEFAULT_PAGE);
     }
 }
