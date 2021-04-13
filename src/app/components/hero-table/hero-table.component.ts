@@ -20,5 +20,8 @@ export class HeroTableComponent {
         this.hero.searchBS.next(event.target.value);
     }
 
-    movePageBy(moveBy: number) {}
+    movePageBy(moveBy: number) {
+        const currentPage = this.hero.pageBS.getValue();
+        this.hero.pageBS.next(currentPage + moveBy);
+    }
 }
