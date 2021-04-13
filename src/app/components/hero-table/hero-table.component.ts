@@ -11,6 +11,7 @@ export class HeroTableComponent {
     heroes$: Observable<Hero[]> = this.hero.heroes$;
     search$ = this.hero.searchBS;
     page$ = this.hero.userPage$;
+    limit$ = this.hero.limitBS;
     totalResults$ = this.hero.totalResults$;
     totalPages$ = this.hero.totalPages$;
 
@@ -23,5 +24,9 @@ export class HeroTableComponent {
     movePageBy(moveBy: number) {
         const currentPage = this.hero.pageBS.getValue();
         this.hero.pageBS.next(currentPage + moveBy);
+    }
+
+    setLimit(limit: number) {
+        this.hero.limitBS.next(limit);
     }
 }
