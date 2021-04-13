@@ -1,7 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
-import { debounceTime, map, shareReplay, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
+import {
+    debounceTime,
+    distinctUntilChanged,
+    map,
+    shareReplay,
+    switchMap,
+    tap,
+} from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
 export interface Hero {
@@ -64,11 +71,16 @@ export class HeroService {
 
     userPage$ = this.pageBS.pipe(map(page => page + 1));
 
+    private heroesResponseCache = {};
+
     private params$ = combineLatest([
-        this.searchBS,
+        this.searchBS.pipe(debounceTime(500)),
         this.limitBS,
-        this.pageBS,
+        this.pageBS.pipe(debounceTime(500)),
     ]).pipe(
+        distinctUntilChanged((prev, curr) => {
+            return JSON.stringify(prev) === JSON.stringify(curr);
+        }),
         map(([searchTerm, limit, page]) => {
             const params: any = {
                 apikey: environment.MARVEL_API.PUBLIC_KEY,
@@ -83,13 +95,26 @@ export class HeroService {
     );
 
     private heroesResponse$ = this.params$.pipe(
-        debounceTime(500),
         tap(() => this.loadingBS.next(true)),
-        switchMap(_params =>
-            this.http.get(HERO_API, {
-                params: _params,
-            }),
-        ),
+        switchMap(_params => {
+            const paramsStr = JSON.stringify(_params);
+            if (this.heroesResponseCache[paramsStr]) {
+                return of(this.heroesResponseCache[paramsStr]);
+            }
+            return this.http
+                .get(HERO_API, {
+                    params: _params,
+                })
+                .pipe(
+                    tap(
+                        (res: any) =>
+                            (this.heroesResponseCache[paramsStr] = {
+                                response: res,
+                                time: Date.now(),
+                            }),
+                    ),
+                );
+        }),
         tap(() => this.loadingBS.next(false)),
         shareReplay(1),
     );
