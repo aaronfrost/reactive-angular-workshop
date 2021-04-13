@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
-import { debounceTime, map, shareReplay, switchMap } from 'rxjs/operators';
+import { debounceTime, map, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
 export interface Hero {
@@ -52,13 +52,23 @@ export const DEFAULT_PAGE = 0;
 export class HeroService {
     limits = LIMITS;
 
-    searchBS = new BehaviorSubject<string>(DEFAULT_SEARCH);
-    limitBS = new BehaviorSubject<number>(DEFAULT_LIMIT);
-    pageBS = new BehaviorSubject<number>(DEFAULT_PAGE);
+    private searchBS = new BehaviorSubject<string>(DEFAULT_SEARCH);
+    private limitBS = new BehaviorSubject<number>(DEFAULT_LIMIT);
+    private pageBS = new BehaviorSubject<number>(DEFAULT_PAGE);
+    private loadingBS = new BehaviorSubject(false);
+
+    search$ = this.searchBS.asObservable();
+    limit$ = this.limitBS.asObservable();
+    // page$ = this.pageBS.asObservable();
+    loading$ = this.loadingBS.asObservable();
 
     userPage$ = this.pageBS.pipe(map(page => page + 1));
 
-    params$ = combineLatest([this.searchBS, this.limitBS, this.pageBS]).pipe(
+    private params$ = combineLatest([
+        this.searchBS,
+        this.limitBS,
+        this.pageBS,
+    ]).pipe(
         map(([searchTerm, limit, page]) => {
             const params: any = {
                 apikey: environment.MARVEL_API.PUBLIC_KEY,
@@ -74,11 +84,13 @@ export class HeroService {
 
     private heroesResponse$ = this.params$.pipe(
         debounceTime(500),
+        tap(() => this.loadingBS.next(true)),
         switchMap(_params =>
             this.http.get(HERO_API, {
                 params: _params,
             }),
         ),
+        tap(() => this.loadingBS.next(false)),
         shareReplay(1),
     );
 
@@ -95,4 +107,19 @@ export class HeroService {
     );
 
     constructor(private http: HttpClient) {}
+
+    doSearch(term: string) {
+        this.searchBS.next(term);
+        this.pageBS.next(DEFAULT_PAGE);
+    }
+
+    movePageBy(moveBy: number) {
+        const currentPage = this.pageBS.getValue();
+        this.pageBS.next(currentPage + moveBy);
+    }
+
+    setLimit(newLimit: number) {
+        this.limitBS.next(newLimit);
+        this.pageBS.next(DEFAULT_PAGE);
+    }
 }
