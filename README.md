@@ -30,8 +30,8 @@ In order to work on this project and go through the trainings, please do each of
 
 -   Install `git` on your machine.
 -   Install node & npm
-    -   Install node v10 (or higher)
-    -   Installing node v10 automatically installs `npm`
+    -   Install node v14 (or higher)
+    -   Installing node v14 automatically installs `npm`
 -   Install latest Angular CLI .
     -   `npm install -g @angular/cli`
 -   Install your favorite IDE
