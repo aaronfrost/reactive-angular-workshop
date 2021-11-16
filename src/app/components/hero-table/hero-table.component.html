@@ -1,7 +1,11 @@
 <div class="tool-bar">
     <span class="search-tool">
         <label for="herosearch">Search: </label>
-        <input name="herosearch" />
+        <input
+            name="herosearch"
+            [value]="hero.search$ | async"
+            (input)="hero.doSearch($event.target.value)"
+        />
     </span>
     <span class="page-tool">
         <label>Page ? of ? : </label>
@@ -22,6 +26,6 @@
         <label>Total Results: ???</label>
     </span>
 </div>
-<div class="table-content">
+<div class="table-content" *ngIf="heroes | async as heroes">
     <rx-hero-badge *ngFor="let hero of heroes" [hero]="hero"></rx-hero-badge>
 </div>
