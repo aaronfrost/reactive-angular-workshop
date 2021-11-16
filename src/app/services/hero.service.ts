@@ -50,7 +50,7 @@ const DEFAULT_PAGE = 0;
 export class HeroService {
     limits = LIMITS;
 
-    private searchBS = new BehaviorSubject('black widow');
+    private searchBS = new BehaviorSubject('b');
     private pageBS = new BehaviorSubject(DEFAULT_PAGE);
     private limitBS = new BehaviorSubject(LIMIT_LOW);
 
@@ -58,9 +58,11 @@ export class HeroService {
     page$ = this.pageBS.asObservable();
     limit$ = this.limitBS.asObservable();
 
+    userPage$ = this.page$.pipe(map(page => page + 1));
+
     changes = combineLatest([this.searchBS, this.pageBS, this.limitBS]);
 
-    heroes$ = this.changes.pipe(
+    private heroesResponse$ = this.changes.pipe(
         switchMap(([search, page, limit]) => {
             return this.http.get(HERO_API, {
                 params: {
@@ -71,11 +73,24 @@ export class HeroService {
                 },
             });
         }),
-        map((res: any) => res.data.results),
     );
+    totalHeroes$ = this.heroesResponse$.pipe(map((res: any) => res.data.total));
+    heroes$ = this.heroesResponse$.pipe(map((res: any) => res.data.results));
+    totalPages$ = combineLatest([this.totalHeroes$, this.limit$]).pipe(
+        map(([totalHeroes, limit]) => Math.ceil(totalHeroes / limit)),
+    );
+
     constructor(private http: HttpClient) {}
+
+    movePageBy(moveBy: number): void {
+        this.pageBS.next(this.pageBS.value + moveBy);
+    }
 
     doSearch(term: string): void {
         this.searchBS.next(term);
+    }
+
+    setLimit(limit: number): void {
+        this.limitBS.next(limit);
     }
 }

@@ -8,22 +8,43 @@
         />
     </span>
     <span class="page-tool">
-        <label>Page ? of ? : </label>
+        <label
+            >Page {{ hero.userPage$ | async }} of
+            {{ hero.totalPages$ | async }} :
+        </label>
         <span class="buttons">
-            <button class="prev">Prev</button>
-            <button class="next">Next</button>
+            <button
+                class="prev"
+                (click)="hero.movePageBy(-1)"
+                [disabled]="(hero.page$ | async) === 0"
+            >
+                Prev
+            </button>
+            <button
+                class="next"
+                (click)="hero.movePageBy(1)"
+                [disabled]="
+                    (hero.userPage$ | async) === (hero.totalPages$ | async)
+                "
+            >
+                Next
+            </button>
         </span>
     </span>
     <span class="result-tool">
         <label>Show Results: </label>
         <span class="buttons">
-            <button *ngFor="let limit of hero.limits">
+            <button
+                *ngFor="let limit of hero.limits"
+                (click)="hero.setLimit(limit)"
+                [disabled]="limit == (hero.limit$ | async)"
+            >
                 {{ limit }}
             </button>
         </span>
     </span>
     <span class="total-tool">
-        <label>Total Results: ???</label>
+        <label>Total Results: {{ hero.totalHeroes$ | async }}</label>
     </span>
 </div>
 <div class="table-content" *ngIf="heroes | async as heroes">
