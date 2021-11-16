@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest } from 'rxjs';
-import { debounceTime, map, shareReplay, switchMap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, of } from 'rxjs';
+import { debounceTime, map, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
 export interface Hero {
@@ -44,27 +44,28 @@ const LIMITS = [LIMIT_LOW, LIMIT_MID, LIMIT_HIGH];
 
 const DEFAULT_PAGE = 0;
 
+const DEFAULT_STATE = {
+    search: '',
+    page: DEFAULT_PAGE,
+    limit: LIMIT_LOW,
+};
+
 @Injectable({
     providedIn: 'root',
 })
 export class HeroService {
     limits = LIMITS;
 
-    private searchBS = new BehaviorSubject('');
-    private pageBS = new BehaviorSubject(DEFAULT_PAGE);
-    private limitBS = new BehaviorSubject(LIMIT_LOW);
+    private stateBS = new BehaviorSubject(DEFAULT_STATE);
+    search$ = this.stateBS.pipe(map(state => state.search));
+    page$ = this.stateBS.pipe(map(state => state.page));
+    limit$ = this.stateBS.pipe(map(state => state.limit));
 
-    search$ = this.searchBS.asObservable();
-    page$ = this.pageBS.asObservable();
-    limit$ = this.limitBS.asObservable();
+    private cache = {};
 
-    userPage$ = this.page$.pipe(map(page => page + 1));
-
-    changes = combineLatest([this.searchBS, this.pageBS, this.limitBS]);
-
-    private heroesResponse$ = this.changes.pipe(
+    private heroesResponse$ = this.stateBS.pipe(
         debounceTime(500),
-        switchMap(([search, page, limit]) => {
+        switchMap(({ search, page, limit }) => {
             const params: any = {
                 apikey: environment.MARVEL_API.PUBLIC_KEY,
                 limit: `${limit}`,
@@ -74,9 +75,15 @@ export class HeroService {
             if (search) {
                 params.nameStartsWith = search;
             }
-            return this.http.get(HERO_API, {
-                params,
-            });
+
+            if (this.cache[JSON.stringify(params)]) {
+                return of(this.cache[JSON.stringify(params)]);
+            }
+            return this.http
+                .get(HERO_API, {
+                    params,
+                })
+                .pipe(tap(res => (this.cache[JSON.stringify(params)] = res)));
         }),
         shareReplay(1),
     );
@@ -89,16 +96,25 @@ export class HeroService {
     constructor(private http: HttpClient) {}
 
     movePageBy(moveBy: number): void {
-        this.pageBS.next(this.pageBS.value + moveBy);
+        this.stateBS.next({
+            ...this.stateBS.value,
+            page: this.stateBS.value.page + moveBy,
+        });
     }
 
     doSearch(term: string): void {
-        this.pageBS.next(0);
-        this.searchBS.next(term);
+        this.stateBS.next({
+            ...this.stateBS.value,
+            search: term,
+            page: 0,
+        });
     }
 
     setLimit(limit: number): void {
-        this.pageBS.next(0);
-        this.limitBS.next(limit);
+        this.stateBS.next({
+            ...this.stateBS.value,
+            limit,
+            page: 0,
+        });
     }
 }
