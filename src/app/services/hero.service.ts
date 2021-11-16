@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, shareReplay, switchMap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
 export interface Hero {
@@ -50,7 +50,7 @@ const DEFAULT_PAGE = 0;
 export class HeroService {
     limits = LIMITS;
 
-    private searchBS = new BehaviorSubject('b');
+    private searchBS = new BehaviorSubject('');
     private pageBS = new BehaviorSubject(DEFAULT_PAGE);
     private limitBS = new BehaviorSubject(LIMIT_LOW);
 
@@ -64,15 +64,20 @@ export class HeroService {
 
     private heroesResponse$ = this.changes.pipe(
         switchMap(([search, page, limit]) => {
+            const params: any = {
+                apikey: environment.MARVEL_API.PUBLIC_KEY,
+                limit: `${limit}`,
+                offset: `${page * limit}`, // page * limit
+            };
+
+            if (search) {
+                params.nameStartsWith = search;
+            }
             return this.http.get(HERO_API, {
-                params: {
-                    apikey: environment.MARVEL_API.PUBLIC_KEY,
-                    limit: `${limit}`,
-                    nameStartsWith: search, // once we have search
-                    offset: `${page * limit}`, // page * limit
-                },
+                params,
             });
         }),
+        shareReplay(1),
     );
     totalHeroes$ = this.heroesResponse$.pipe(map((res: any) => res.data.total));
     heroes$ = this.heroesResponse$.pipe(map((res: any) => res.data.results));
@@ -87,10 +92,12 @@ export class HeroService {
     }
 
     doSearch(term: string): void {
+        this.pageBS.next(0);
         this.searchBS.next(term);
     }
 
     setLimit(limit: number): void {
+        this.pageBS.next(0);
         this.limitBS.next(limit);
     }
 }
