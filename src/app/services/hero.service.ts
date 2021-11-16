@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest } from 'rxjs';
-import { map, shareReplay, switchMap } from 'rxjs/operators';
+import { debounceTime, map, shareReplay, switchMap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
 export interface Hero {
@@ -63,6 +63,7 @@ export class HeroService {
     changes = combineLatest([this.searchBS, this.pageBS, this.limitBS]);
 
     private heroesResponse$ = this.changes.pipe(
+        debounceTime(500),
         switchMap(([search, page, limit]) => {
             const params: any = {
                 apikey: environment.MARVEL_API.PUBLIC_KEY,
