@@ -15,6 +15,6 @@ if (environment.MARVEL_API.PUBLIC_KEY === 'INSERT YOUR KEY FIRST') {
      * Once you have done that, in their portal, you will need to add http://localhost to their
      * whitelisted domains. If you don't do this, it will fail for you.
      */
-    document.write('INSERT YOUR KEY FIRST');
+    document.body.innerHTML = 'INSERT YOUR KEY FIRST<BR>See <code>environments.ts</code> for instructions';
     throw new Error('You must setup a public and private API key first.');
 }
