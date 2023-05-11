@@ -2,8 +2,8 @@ export const environment = {
     production: false,
     MARVEL_API: {
         URL: 'https://gateway.marvel.com:443',
-        PUBLIC_KEY: 'INSERT YOUR KEY FIRST',
-        PRIVATE_KEY: 'INSERT YOUR KEY FIRST',
+        PUBLIC_KEY: '1b96211f0ecf1e1f6b4de1ea1a250414',
+        PRIVATE_KEY: '050ba6d672bb5d89a89a7f07a4c32f35d4abffb8',
     },
 };
 
